@@ -64,6 +64,10 @@
   </script>
 
   <style>
+    :root {
+      --motion-ease: cubic-bezier(.16,1,.3,1);
+    }
+
     body {
       font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
       background:
@@ -88,11 +92,15 @@
       color: #fff;
       border: none;
       cursor: pointer;
-      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.25s var(--motion-ease), filter 0.25s var(--motion-ease), box-shadow 0.25s var(--motion-ease);
     }
     .btn-primary-brand:hover {
       filter: brightness(1.05);
       transform: translateY(-1px);
+      box-shadow: rgba(255,255,255,0.1) 0px 2px 0px 0px inset, 0 14px 30px rgba(252,107,45,0.22);
     }
     .btn-dark-brand {
       background: linear-gradient(180deg, #363a44 0%, #030712 100%);
@@ -100,23 +108,54 @@
       color: #fff;
       border: none;
       cursor: pointer;
-      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.25s var(--motion-ease), filter 0.25s var(--motion-ease), box-shadow 0.25s var(--motion-ease);
     }
     .btn-dark-brand:hover {
       filter: brightness(1.15);
       transform: translateY(-1px);
+      box-shadow: rgba(255,255,255,0.1) 0px 2px 0px 0px inset, 0 14px 30px rgba(3,7,18,0.22);
     }
     .btn-ghost-brand {
       background: transparent;
       color: #374151;
       border: 1px solid #e5e7eb;
       cursor: pointer;
-      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.25s var(--motion-ease), border-color 0.25s var(--motion-ease), color 0.25s var(--motion-ease), background 0.25s var(--motion-ease), box-shadow 0.25s var(--motion-ease);
     }
     .btn-ghost-brand:hover {
       border-color: #fc6b2d;
       color: #fc6b2d;
       background: #fff4f0;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(252,107,45,0.08);
+    }
+    .btn-primary-brand::after,
+    .btn-dark-brand::after,
+    .btn-ghost-brand::after {
+      content: "";
+      position: absolute;
+      top: -10%;
+      bottom: -10%;
+      left: -120%;
+      width: 40%;
+      transform: skewX(-24deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
+      transition: left 0.6s var(--motion-ease);
+      pointer-events: none;
+    }
+    .btn-ghost-brand::after {
+      background: linear-gradient(90deg, transparent, rgba(252,107,45,0.18), transparent);
+    }
+    .btn-primary-brand:hover::after,
+    .btn-dark-brand:hover::after,
+    .btn-ghost-brand:hover::after {
+      left: 125%;
     }
 
     .nav-shell {
@@ -126,6 +165,7 @@
     .nav-scrolled {
       background: rgb(255,255,255);
       border-bottom-color: rgb(229,231,235);
+      box-shadow: 0 18px 44px rgba(15,23,42,0.08);
     }
     .portone-wordmark {
       font-family: 'Geist', sans-serif;
@@ -197,7 +237,7 @@
     /* --- Fade animations --- */
     .fade-up {
       opacity: 0; transform: translateY(32px);
-      transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
+      transition: opacity 0.7s var(--motion-ease), transform 0.7s var(--motion-ease);
     }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
     .fade-up.d1 { transition-delay: .1s; }
@@ -210,11 +250,14 @@
       border-radius: 16px;
       box-shadow: rgba(0,0,0,0.05) 0px 1px 0px 0px, rgba(0,0,0,0.08) 0px 2px 8px 0px;
       border: 1px solid #f3f4f6;
+      position: relative;
+      transform-origin: center;
+      transition: transform 0.3s var(--motion-ease), box-shadow 0.3s var(--motion-ease), border-color 0.3s var(--motion-ease);
     }
     .card-elevated:hover {
       box-shadow: rgba(0,0,0,0.08) 0px 4px 16px 0px, rgba(0,0,0,0.04) 0px 1px 2px 0px;
       transform: translateY(-2px);
-      transition: all 0.3s ease;
+      border-color: rgba(252,107,45,0.16);
     }
 
     /* --- Gradient text --- */
@@ -286,6 +329,7 @@
       top: 138px;
       left: 8px;
       background: radial-gradient(circle, rgba(252,107,45,0.18) 0%, rgba(252,107,45,0.03) 55%, rgba(252,107,45,0) 74%);
+      animation: float-orb 14s ease-in-out infinite;
     }
     .hero-ambient-orb--cool {
       width: 320px;
@@ -293,39 +337,106 @@
       right: -60px;
       top: 160px;
       background: radial-gradient(circle, rgba(56,189,248,0.16) 0%, rgba(56,189,248,0.03) 54%, rgba(56,189,248,0) 74%);
+      animation: float-orb 18s ease-in-out infinite reverse;
     }
-    .hero-floating-chip {
+    .hero-msg-bubble {
       position: absolute;
       display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(255,255,255,0.82);
-      box-shadow: 0 12px 30px rgba(15,23,42,0.06);
-      backdrop-filter: blur(14px);
-      color: #475569;
-      font-size: 12px;
+      padding: 10px 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.95);
+      box-shadow: 0 8px 28px rgba(15,23,42,0.10), 0 2px 8px rgba(15,23,42,0.06);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: #374151;
+      font-size: 14px;
       font-weight: 500;
-      z-index: 1;
+      line-height: 1.4;
+      z-index: 2;
       pointer-events: none;
+      white-space: nowrap;
+      opacity: 0;
+      animation: bubble-notify 8s ease-in-out infinite;
     }
-    .hero-floating-chip::before {
+    /* 말풍선 꼬리 (왼쪽 버블: 오른쪽 하단) */
+    .hero-msg-bubble::after {
       content: "";
-      width: 7px;
-      height: 7px;
+      position: absolute;
+      bottom: -6px;
+      right: 16px;
+      width: 11px;
+      height: 11px;
+      background: rgba(255,255,255,0.92);
+      border-right: 1px solid rgba(255,255,255,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.95);
+      transform: rotate(45deg);
+      border-radius: 0 0 3px 0;
+    }
+    /* 오른쪽 버블: 꼬리 왼쪽 하단 */
+    .hero-msg-bubble:nth-child(4)::after,
+    .hero-msg-bubble:nth-child(6)::after,
+    .hero-msg-bubble:nth-child(7)::after {
+      right: auto;
+      left: 16px;
+      border-right: none;
+      border-left: 1px solid rgba(255,255,255,0.95);
+      border-radius: 0 0 0 3px;
+    }
+    .hero-msg-bubble--ghost {
+      background: rgba(255,255,255,0.52);
+      color: #9ca3af;
+      border-color: rgba(255,255,255,0.65);
+      box-shadow: 0 4px 16px rgba(15,23,42,0.05);
+    }
+    .hero-msg-bubble--ghost::after {
+      background: rgba(255,255,255,0.52);
+    }
+    /* individual positions & staggered delays (8s / 5 = 1.6s apart) */
+    .hero-msg-bubble:nth-child(3) { top: 230px; left: calc(50% - 490px); animation-delay: 0s; }
+    .hero-msg-bubble:nth-child(4) { top: 210px; right: calc(50% - 490px); animation-delay: -1.6s; }
+    .hero-msg-bubble:nth-child(5) { top: 400px; left: calc(50% - 470px); animation-delay: -3.2s; }
+    .hero-msg-bubble:nth-child(6) { top: 380px; right: calc(50% - 470px); animation-delay: -4.8s; }
+    .hero-msg-bubble:nth-child(7) { top: 555px; right: calc(50% - 580px); animation-delay: -6.4s; }
+    .hero-dashboard-card {
+      transform-style: preserve-3d;
+      transition: transform 0.35s var(--motion-ease), box-shadow 0.35s var(--motion-ease), border-color 0.35s var(--motion-ease);
+      will-change: transform;
+    }
+    .hero-dashboard-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 6% -36% 38%;
+      height: 120px;
       border-radius: 999px;
-      background: linear-gradient(180deg, #fc6b2d 0%, #fb923c 100%);
-      box-shadow: 0 0 0 6px rgba(252,107,45,0.08);
+      background: radial-gradient(circle, rgba(252,107,45,0.18) 0%, rgba(252,107,45,0) 72%);
+      filter: blur(28px);
+      pointer-events: none;
+      opacity: 0.7;
     }
-    .hero-floating-chip--left {
-      top: 458px;
-      left: calc(50% - 470px);
+    .hero-metric-card {
+      transition: transform 0.3s var(--motion-ease), background 0.3s var(--motion-ease);
     }
-    .hero-floating-chip--right {
-      top: 418px;
-      right: calc(50% - 560px);
+    .hero-dashboard-card:hover .hero-metric-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.66) 0%, rgba(248,250,252,0.85) 100%);
+    }
+    .hero-dashboard-card:hover .hero-metric-card:nth-child(2) {
+      transform: translateY(-3px);
+    }
+    .line-chart-path {
+      stroke-dasharray: 720;
+      stroke-dashoffset: 720;
+      animation: draw-line 1.9s 0.35s var(--motion-ease) forwards;
+    }
+    .line-chart-dot {
+      opacity: 0;
+      transform-origin: center;
+      animation: dot-pop 0.7s 1.7s var(--motion-ease) forwards;
+    }
+    .line-chart-tooltip {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: float-in 0.7s 1.15s var(--motion-ease) forwards, tooltip-drift 4.8s 1.9s ease-in-out infinite;
     }
     .section-surface {
       background:
@@ -338,9 +449,7 @@
         linear-gradient(180deg, #fbfcfe 0%, #f7fafc 100%);
     }
     @media (min-width: 1024px) {
-      .hero-floating-chip {
-        display: inline-flex;
-      }
+      .hero-msg-bubble { display: block; }
     }
 
     /* --- Tab pill active --- */
@@ -348,15 +457,398 @@
       background: linear-gradient(180deg, #fc6b2d 0%, #fc7f49 100%);
       box-shadow: rgba(255,255,255,0.1) 0px 2px 0px 0px inset, rgba(252,107,45,0.25) 0px 4px 12px 0px;
       color: #fff;
+      transform: translateY(-1px) scale(1.01);
+    }
+    .tab-btn {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s var(--motion-ease), color 0.25s var(--motion-ease), background 0.25s var(--motion-ease), box-shadow 0.25s var(--motion-ease);
+    }
+    .tab-btn:hover {
+      transform: translateY(-1px);
+    }
+    .tab-content {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.35s var(--motion-ease), transform 0.35s var(--motion-ease);
+    }
+    .tab-content.is-current {
+      opacity: 1;
+      transform: translateY(0);
     }
     .tab-content > div {
       height: 500px;
+    }
+    .mock-table-row,
+    .mock-form-field,
+    .mock-form-action,
+    .mock-status-row,
+    .mock-transfer-panel {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .tab-content.is-current .mock-table-row {
+      animation: row-enter 0.55s var(--motion-ease) both;
+    }
+    .tab-content.is-current .mock-table-row:nth-child(1) { animation-delay: 0.08s; }
+    .tab-content.is-current .mock-table-row:nth-child(2) { animation-delay: 0.14s; }
+    .tab-content.is-current .mock-table-row:nth-child(3) { animation-delay: 0.2s; }
+    .tab-content.is-current .mock-table-row:nth-child(4) { animation-delay: 0.26s; }
+    .tab-content.is-current .mock-table-row:nth-child(5) { animation-delay: 0.32s; }
+    .tab-content.is-current .mock-form-field,
+    .tab-content.is-current .mock-form-action {
+      animation: float-in 0.5s var(--motion-ease) both;
+    }
+    .tab-content.is-current .mock-form-field:nth-of-type(1) { animation-delay: 0.08s; }
+    .tab-content.is-current .mock-form-field:nth-of-type(2) { animation-delay: 0.16s; }
+    .tab-content.is-current .mock-form-field:nth-of-type(3) { animation-delay: 0.24s; }
+    .tab-content.is-current .mock-form-action { animation-delay: 0.34s; }
+    .tab-content.is-current .mock-status-row {
+      animation: float-in 0.45s var(--motion-ease) both;
+    }
+    .tab-content.is-current .mock-status-row:nth-child(1) { animation-delay: 0.08s; }
+    .tab-content.is-current .mock-status-row:nth-child(2) { animation-delay: 0.16s; }
+    .tab-content.is-current .mock-status-row:nth-child(3) { animation-delay: 0.24s; }
+    .tab-content.is-current .mock-status-row:nth-child(4) { animation-delay: 0.32s; }
+    .tab-content.is-current .mock-status-row--ok {
+      animation: float-in 0.45s var(--motion-ease) both, status-pulse-ok 3.4s 1.1s ease-in-out infinite;
+    }
+    .tab-content.is-current .mock-status-row--error {
+      animation: float-in 0.45s var(--motion-ease) both, status-pulse-error 2.2s 1s ease-in-out infinite;
+    }
+    .tab-content.is-current .mock-transfer-panel {
+      animation: float-in 0.55s var(--motion-ease) both, surface-bob 5s 1.1s ease-in-out infinite;
+      animation-delay: 0.08s, 1.1s;
+    }
+    .mock-transfer-action {
+      transition: transform 0.25s var(--motion-ease), box-shadow 0.25s var(--motion-ease);
+    }
+    .tab-content.is-current .mock-transfer-action {
+      animation: cta-breathe 2.8s 1s ease-in-out infinite;
     }
 
     /* --- Stat counter --- */
     .stat-value-brand {
       font-weight: 500;
       letter-spacing: -0.04em;
+    }
+
+    /* --- Payout methods scene --- */
+    .payout-scene {
+      position: relative;
+    }
+    .payout-scene-shell {
+      position: relative;
+      overflow: hidden;
+      padding: 32px;
+      border-radius: 32px;
+      border: 1px solid rgba(229,231,235,0.9);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(37,99,235,0.12) 0%, rgba(37,99,235,0) 28%),
+        radial-gradient(circle at 82% 22%, rgba(252,107,45,0.12) 0%, rgba(252,107,45,0) 26%),
+        linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(248,250,252,0.98) 100%);
+      box-shadow: 0 24px 60px rgba(15,23,42,0.08);
+    }
+    .payout-scene-orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(18px);
+      opacity: 0.78;
+      pointer-events: none;
+    }
+    .payout-scene-orb--warm {
+      width: 180px;
+      height: 180px;
+      top: 28px;
+      left: 24px;
+      background: radial-gradient(circle, rgba(37,99,235,0.18) 0%, rgba(37,99,235,0) 72%);
+      animation: float-orb 14s ease-in-out infinite;
+    }
+    .payout-scene-orb--cool {
+      width: 220px;
+      height: 220px;
+      right: 12px;
+      bottom: 8px;
+      background: radial-gradient(circle, rgba(252,107,45,0.16) 0%, rgba(252,107,45,0) 74%);
+      animation: float-orb 17s ease-in-out infinite reverse;
+    }
+    .payout-scene-top,
+    .payout-scene-bottom {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .payout-scene-top {
+      margin-bottom: 24px;
+    }
+    .payout-scene-bottom {
+      margin-top: 24px;
+    }
+    .payout-scene-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(229,231,235,0.95);
+      box-shadow: 0 10px 24px rgba(15,23,42,0.05);
+      color: #374151;
+      font-size: 12px;
+      font-weight: 500;
+      backdrop-filter: blur(10px);
+    }
+    .payout-scene-chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #fc6b2d 0%, #fb923c 100%);
+      box-shadow: 0 0 0 6px rgba(252,107,45,0.08);
+    }
+    .payout-scene-chip--muted::before {
+      background: linear-gradient(180deg, #38bdf8 0%, #60a5fa 100%);
+      box-shadow: 0 0 0 6px rgba(56,189,248,0.08);
+    }
+    .payout-network {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr);
+      align-items: center;
+      gap: 18px;
+    }
+    .payout-method-card {
+      position: relative;
+      min-height: 236px;
+      width: 100%;
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid rgba(229,231,235,0.95);
+      background: rgba(255,255,255,0.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+      appearance: none;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.45s var(--motion-ease), border-color 0.45s var(--motion-ease), box-shadow 0.45s var(--motion-ease), background 0.45s var(--motion-ease);
+    }
+    .payout-method-card:focus-visible {
+      outline: 2px solid rgba(252,107,45,0.45);
+      outline-offset: 4px;
+    }
+    .payout-method-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #fff;
+      border: 1px solid rgba(229,231,235,0.9);
+      color: #6b7280;
+    }
+    .payout-method-icon {
+      width: 56px;
+      height: 56px;
+      margin-top: 18px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(229,231,235,0.9);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      box-shadow: 0 12px 24px rgba(15,23,42,0.06);
+      animation: payout-icon-float 7s ease-in-out infinite;
+    }
+    .payout-method-card--bank .payout-method-icon {
+      animation-delay: -3.5s;
+    }
+    .payout-method-name {
+      margin-top: 18px;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: #111827;
+      font-weight: 500;
+    }
+    .payout-method-caption {
+      margin-top: 8px;
+      font-size: 15px;
+      color: #6b7280;
+    }
+    .payout-method-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }
+    .payout-method-tags span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(249,250,251,0.96);
+      border: 1px solid rgba(229,231,235,0.95);
+      color: #4b5563;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .payout-router {
+      position: relative;
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .payout-router-core {
+      position: relative;
+      z-index: 2;
+      width: 86px;
+      height: 86px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 35%, rgba(248,250,252,0.95) 100%);
+      border: 1px solid rgba(229,231,235,0.95);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.12);
+      animation: payout-core-pulse 3.6s ease-in-out infinite;
+    }
+    .payout-router-core::before {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border-radius: 999px;
+      border: 1px solid rgba(252,107,45,0.16);
+      opacity: 0.8;
+    }
+    .payout-router-core-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #111827;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .payout-router-core-label svg {
+      color: #fc6b2d;
+    }
+    .payout-router-line {
+      position: absolute;
+      top: 50%;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(203,213,225,0.55);
+      transform: translateY(-50%);
+      transition: opacity 0.45s var(--motion-ease), box-shadow 0.45s var(--motion-ease), background 0.45s var(--motion-ease);
+    }
+    .payout-router-line--left {
+      left: 0;
+      right: calc(50% + 52px);
+    }
+    .payout-router-line--right {
+      left: calc(50% + 52px);
+      right: 0;
+    }
+    .payout-router-packet {
+      position: absolute;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      margin-top: -6px;
+      border-radius: 999px;
+      opacity: 0;
+      animation-duration: 2.4s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-play-state: paused;
+      box-shadow: 0 0 0 8px rgba(255,255,255,0.24);
+    }
+    .payout-router-packet--left {
+      left: calc(50% - 6px);
+      background: linear-gradient(180deg, #93bbfd 0%, #2563eb 100%);
+      animation-name: payout-packet-left;
+    }
+    .payout-router-packet--right {
+      left: calc(50% - 6px);
+      background: linear-gradient(180deg, #fdba74 0%, #fc6b2d 100%);
+      animation-name: payout-packet-right;
+    }
+    .payout-router-packet--delay {
+      animation-delay: 1.2s;
+    }
+    [data-active-rail="paypal"] .payout-method-card--paypal {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(37,99,235,0.28);
+      background: linear-gradient(180deg, rgba(239,246,255,0.98) 0%, rgba(255,255,255,0.82) 100%);
+      box-shadow: 0 24px 44px rgba(37,99,235,0.14);
+    }
+    [data-active-rail="paypal"] .payout-method-card--paypal .payout-method-icon {
+      border-color: rgba(37,99,235,0.22);
+      background: linear-gradient(180deg, #eff6ff 0%, #fff 100%);
+    }
+    [data-active-rail="paypal"] .payout-router-line--left {
+      background: linear-gradient(90deg, rgba(37,99,235,0.08) 0%, rgba(37,99,235,0.58) 100%);
+      box-shadow: 0 0 0 6px rgba(37,99,235,0.06);
+      opacity: 1;
+    }
+    [data-active-rail="paypal"] .payout-router-line--right {
+      opacity: 0.28;
+    }
+    [data-active-rail="paypal"] .payout-router-packet--left {
+      animation-play-state: running;
+    }
+    [data-active-rail="bank"] .payout-method-card--bank {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(252,107,45,0.28);
+      background: linear-gradient(180deg, rgba(255,247,242,0.98) 0%, rgba(255,255,255,0.82) 100%);
+      box-shadow: 0 24px 44px rgba(252,107,45,0.14);
+    }
+    [data-active-rail="bank"] .payout-method-card--bank .payout-method-icon {
+      border-color: rgba(252,107,45,0.22);
+      background: linear-gradient(180deg, #fff7f2 0%, #fff 100%);
+    }
+    [data-active-rail="bank"] .payout-router-line--right {
+      background: linear-gradient(90deg, rgba(252,107,45,0.58) 0%, rgba(252,107,45,0.08) 100%);
+      box-shadow: 0 0 0 6px rgba(252,107,45,0.06);
+      opacity: 1;
+    }
+    [data-active-rail="bank"] .payout-router-line--left {
+      opacity: 0.28;
+    }
+    [data-active-rail="bank"] .payout-router-packet--right {
+      animation-play-state: running;
+    }
+    @media (max-width: 1023px) {
+      .payout-scene-shell {
+        padding: 24px;
+        border-radius: 28px;
+      }
+      .payout-network {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .payout-router {
+        height: 90px;
+      }
+      .payout-router-line,
+      .payout-router-packet {
+        display: none;
+      }
+      .payout-method-card {
+        min-height: 0;
+      }
     }
 
     /* --- Table styles --- */
@@ -393,9 +885,19 @@
       border: 1px solid #e5e7eb;
       border-radius: 12px;
       overflow: hidden;
-      transition: all 0.2s ease;
+      background: rgba(255,255,255,0.76);
+      backdrop-filter: blur(10px);
+      transition: border-color 0.25s var(--motion-ease), box-shadow 0.25s var(--motion-ease), transform 0.25s var(--motion-ease);
     }
-    .faq-item:hover { border-color: #d1d5db; }
+    .faq-item:hover {
+      border-color: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(15,23,42,0.06);
+    }
+    .faq-item[open] {
+      border-color: rgba(252,107,45,0.35);
+      box-shadow: 0 18px 40px rgba(252,107,45,0.08);
+    }
     .faq-item summary {
       padding: 20px 24px;
       cursor: pointer;
@@ -406,6 +908,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: color 0.25s var(--motion-ease);
     }
     .faq-item summary::-webkit-details-marker { display: none; }
     .faq-item summary::after {
@@ -415,14 +918,31 @@
       background-repeat: no-repeat;
       background-position: center;
       flex-shrink: 0;
-      transition: transform 0.2s ease;
+      transition: transform 0.25s var(--motion-ease), filter 0.25s var(--motion-ease);
     }
-    .faq-item[open] summary::after { transform: rotate(180deg); }
+    .faq-item[open] summary {
+      color: #fc6b2d;
+    }
+    .faq-item[open] summary::after {
+      transform: rotate(180deg) scale(1.08);
+      filter: saturate(1.2);
+    }
     .faq-item .faq-body {
-      padding: 0 24px 20px;
+      display: grid;
+      grid-template-rows: 0fr;
+      padding: 0 24px 0;
       font-size: 14px;
       line-height: 1.7;
       color: #6b7280;
+      transition: grid-template-rows 0.35s var(--motion-ease), padding 0.35s var(--motion-ease);
+    }
+    .faq-item[open] .faq-body {
+      grid-template-rows: 1fr;
+      padding: 0 24px 20px;
+    }
+    .faq-body-inner {
+      overflow: hidden;
+      min-height: 0;
     }
 
     /* --- Form input (PortOne style) --- */
@@ -675,6 +1195,154 @@
         flex-direction: column;
       }
     }
+    .workflow-step,
+    .mobile-workflow-card {
+      opacity: 0;
+      transform: translateY(18px) scale(0.97);
+    }
+    .fade-up.visible .workflow-step,
+    .fade-up.visible .mobile-workflow-card {
+      animation: workflow-step-in 0.65s var(--motion-ease) both;
+    }
+    .fade-up.visible .workflow-step:nth-child(1),
+    .fade-up.visible .mobile-workflow-card:nth-child(1) { animation-delay: 0.08s; }
+    .fade-up.visible .workflow-step:nth-child(2),
+    .fade-up.visible .mobile-workflow-card:nth-child(2) { animation-delay: 0.16s; }
+    .fade-up.visible .workflow-step:nth-child(3),
+    .fade-up.visible .mobile-workflow-card:nth-child(3) { animation-delay: 0.24s; }
+    .fade-up.visible .workflow-step:nth-child(4),
+    .fade-up.visible .mobile-workflow-card:nth-child(4) { animation-delay: 0.32s; }
+    .fade-up.visible .workflow-step:nth-child(5),
+    .fade-up.visible .mobile-workflow-card:nth-child(5) { animation-delay: 0.4s; }
+    .fade-up.visible .workflow-step:nth-child(6),
+    .fade-up.visible .mobile-workflow-card:nth-child(6) { animation-delay: 0.48s; }
+
+    @keyframes float-orb {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(0, -18px, 0) scale(1.05); }
+    }
+    @keyframes float-chip {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -10px, 0); }
+    }
+    @keyframes bubble-notify {
+      /* 아래서 올라오며 등장 */
+      0%   { opacity: 0; transform: translateY(20px) scale(0.85); }
+      6%   { opacity: 1; transform: translateY(-4px) scale(1.03); }
+      10%  { opacity: 1; transform: translateY(0) scale(1); }
+      /* 가볍게 둥실 */
+      22%  { opacity: 1; transform: translateY(-6px) scale(1); }
+      30%  { opacity: 1; transform: translateY(0) scale(1); }
+      /* 위로 사라짐 */
+      38%  { opacity: 0; transform: translateY(-12px) scale(0.94); }
+      /* 대기 */
+      100% { opacity: 0; transform: translateY(20px) scale(0.85); }
+    }
+    @keyframes float-in {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes draw-line {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes dot-pop {
+      0% { opacity: 0; transform: scale(0.55); }
+      70% { opacity: 1; transform: scale(1.18); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes tooltip-drift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes status-pulse-ok {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+      50% { box-shadow: 0 0 0 10px rgba(16,185,129,0.08); }
+    }
+    @keyframes status-pulse-error {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+      50% { box-shadow: 0 0 0 10px rgba(239,68,68,0.08); }
+    }
+    @keyframes row-enter {
+      from { opacity: 0; transform: translateX(16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes workflow-step-in {
+      from { opacity: 0; transform: translateY(18px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes surface-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes cta-breathe {
+      0%, 100% {
+        transform: translateY(0);
+        box-shadow: 0 0 0 0 rgba(17,24,39,0);
+      }
+      50% {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 28px rgba(17,24,39,0.18);
+      }
+    }
+    @keyframes payout-icon-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes payout-core-pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 18px 40px rgba(15,23,42,0.12);
+      }
+      50% {
+        transform: scale(1.04);
+        box-shadow: 0 26px 48px rgba(15,23,42,0.16);
+      }
+    }
+    @keyframes payout-packet-left {
+      0% {
+        transform: translateX(0) scale(0.7);
+        opacity: 0;
+      }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% {
+        transform: translateX(-52px) scale(1);
+        opacity: 0;
+      }
+    }
+    @keyframes payout-packet-right {
+      0% {
+        transform: translateX(0) scale(0.7);
+        opacity: 0;
+      }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% {
+        transform: translateX(52px) scale(1);
+        opacity: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .fade-up,
+      .tab-content,
+      .workflow-step,
+      .mobile-workflow-card,
+      .mock-table-row,
+      .mock-form-field,
+      .mock-form-action,
+      .mock-status-row,
+      .mock-transfer-panel {
+        opacity: 1;
+        transform: none;
+      }
+    }
   </style>
 </head>
 <body class="bg-white text-gray-900 overflow-x-hidden antialiased">
@@ -689,7 +1357,7 @@
         <a href="#features" class="nav-link inline-flex items-center gap-1.5">서비스 <span class="nav-badge-n">N</span></a>
         <a href="#how-it-works" class="nav-link">가격안내</a>
         <a href="#faq" class="nav-link">헬프센터</a>
-        <a href="#results" class="nav-link">개발가이드</a>
+        <a href="#payout-methods" class="nav-link">송금수단</a>
         <a href="#contact" class="nav-link">블로그</a>
       </div>
       <div class="flex items-center gap-6">
@@ -707,7 +1375,7 @@
         <a href="#features" class="block py-2.5 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50" onclick="toggleMobileMenu()">서비스</a>
         <a href="#how-it-works" class="block py-2.5 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50" onclick="toggleMobileMenu()">가격안내</a>
         <a href="#faq" class="block py-2.5 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50" onclick="toggleMobileMenu()">헬프센터</a>
-        <a href="#results" class="block py-2.5 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50" onclick="toggleMobileMenu()">개발가이드</a>
+        <a href="#payout-methods" class="block py-2.5 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50" onclick="toggleMobileMenu()">송금수단</a>
         <a href="#contact" class="block py-2.5 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50" onclick="toggleMobileMenu()">블로그</a>
         <a href="#" class="block py-2.5 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50" onclick="toggleMobileMenu()">로그인</a>
       </div>
@@ -718,8 +1386,11 @@
   <section class="hero-gradient relative pt-[184px] lg:pt-[216px] pb-24 overflow-hidden">
     <div class="hero-ambient-orb hero-ambient-orb--warm"></div>
     <div class="hero-ambient-orb hero-ambient-orb--cool"></div>
-    <div class="hero-floating-chip hero-floating-chip--left">Global creator payout</div>
-    <div class="hero-floating-chip hero-floating-chip--right">USD · JPY · EUR · KRW</div>
+    <div class="hero-msg-bubble">When will I get paid?</div>
+    <div class="hero-msg-bubble hero-msg-bubble--ghost">入金まだですか？</div>
+    <div class="hero-msg-bubble">还没收到款...</div>
+    <div class="hero-msg-bubble">¿Y mi pago?</div>
+    <div class="hero-msg-bubble hero-msg-bubble--ghost">Где оплата?</div>
     <div class="max-w-[1200px] mx-auto px-6 relative z-10">
           <div class="grid grid-cols-1 gap-12 items-center justify-items-center">
         <!-- Left Copy -->
@@ -738,7 +1409,7 @@
 
         <!-- Right Mock UI — Dashboard -->
         <div class="fade-up d2 w-full max-w-[780px]">
-          <div class="card-elevated overflow-hidden p-6 lg:p-8">
+          <div class="card-elevated hero-dashboard-card overflow-hidden p-6 lg:p-8" data-tilt-card>
             <!-- Dashboard Title -->
             <div class="flex items-center justify-between mb-6">
               <h3 class="font-medium text-gray-900 text-[20px] tracking-tight-brand">대시보드</h3>
@@ -771,7 +1442,7 @@
             <!-- Summary Cards -->
             <div class="flex items-stretch border border-gray-200 rounded-lg divide-x divide-gray-200 mb-8">
               <!-- 지급 대기 -->
-              <div class="flex-1 p-3 lg:p-4">
+              <div class="hero-metric-card flex-1 p-3 lg:p-4">
                 <div class="flex items-center justify-between mb-1">
                   <span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[12px] bg-[#dcfce7] text-[#15803d]">지급 대기</span>
                   <span class="text-[13px]"><span class="text-gray-400 font-medium">총 </span><span class="text-[#15803d]">5</span><span class="text-gray-400 font-medium"> 건</span></span>
@@ -781,7 +1452,7 @@
                 </div>
               </div>
               <!-- 지급 완료 -->
-              <div class="flex-1 p-3 lg:p-4">
+              <div class="hero-metric-card flex-1 p-3 lg:p-4">
                 <div class="flex items-center justify-between mb-1">
                   <span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[12px] bg-[#e6f1ff] text-[#1d4ed8]">지급 완료</span>
                   <span class="text-[13px]"><span class="text-gray-400 font-medium">총 </span><span class="text-[#1d4ed8]">5</span><span class="text-gray-400 font-medium"> 건</span></span>
@@ -791,7 +1462,7 @@
                 </div>
               </div>
               <!-- 지급 실패 -->
-              <div class="flex-1 p-3 lg:p-4">
+              <div class="hero-metric-card flex-1 p-3 lg:p-4">
                 <div class="flex items-center justify-between mb-1">
                   <span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[12px] bg-gray-200 text-gray-700">지급 실패</span>
                   <span class="text-[13px]"><span class="text-gray-400 font-medium">총 </span><span class="text-gray-700">1</span><span class="text-gray-400 font-medium"> 건</span></span>
@@ -820,14 +1491,14 @@
                   <!-- Baseline -->
                   <line x1="40" y1="160" x2="680" y2="160" stroke="#e5e7eb" stroke-width="1"/>
                   <!-- Line chart path -->
-                  <polyline fill="none" stroke="#fc6b2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  <polyline class="line-chart-path" fill="none" stroke="#fc6b2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     points="60,145 105,130 150,135 195,120 240,90 285,75 330,80 375,55 420,65 465,70 510,85 555,75 600,80 645,60"/>
                   <!-- Data point highlight -->
-                  <circle cx="375" cy="55" r="5" fill="white" stroke="#fc6b2d" stroke-width="2"/>
-                  <circle cx="375" cy="55" r="2.5" fill="#fc6b2d"/>
+                  <circle class="line-chart-dot" cx="375" cy="55" r="5" fill="white" stroke="#fc6b2d" stroke-width="2"/>
+                  <circle class="line-chart-dot" cx="375" cy="55" r="2.5" fill="#fc6b2d"/>
                 </svg>
                 <!-- Hover tooltip -->
-                <div class="absolute bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-left" style="left: 48%; top: 2px; min-width: 130px;">
+                <div class="line-chart-tooltip absolute bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-left" style="left: 48%; top: 2px; min-width: 130px;">
                   <div class="text-[12px] font-medium text-gray-900 mb-2">지급액(KRW)</div>
                   <div class="border-l-2 border-[#fc6b2d] pl-2.5">
                     <div class="text-[11px] text-gray-400">2026. 4. 15</div>
@@ -926,7 +1597,7 @@
         </div>
 
         <!-- Tab 0: Influencer Management -->
-        <div id="tab-content-0" class="tab-content">
+        <div id="tab-content-0" class="tab-content is-current">
           <div class="bg-gray-50 rounded-2xl p-8 lg:p-12 border border-gray-100 h-full flex items-center">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
               <div>
@@ -942,11 +1613,11 @@
                 <table class="w-full table-portone">
                   <thead><tr><th class="text-left">이름</th><th class="text-left">플랫폼</th><th class="text-left">금액</th><th class="text-left">상태</th></tr></thead>
                   <tbody>
-                    <tr><td class="font-medium text-gray-900">Sarah Johnson</td><td class="text-gray-400">YouTube</td><td class="font-geist text-[13px]">$2,400</td><td><span class="badge-portone bg-emerald-50 text-emerald-700">송금 완료</span></td></tr>
-                    <tr><td class="font-medium text-gray-900">Yuki Tanaka</td><td class="text-gray-400">Instagram</td><td class="font-geist text-[13px]">¥180,000</td><td><span class="badge-portone bg-brand-light text-[#fc6b2d]">검증 완료</span></td></tr>
-                    <tr><td class="font-medium text-gray-900">Emma Chen</td><td class="text-gray-400">TikTok</td><td class="font-geist text-[13px]">¥8,500</td><td><span class="badge-portone bg-amber-50 text-amber-700">검증 중</span></td></tr>
-                    <tr><td class="font-medium text-gray-900">Priya Sharma</td><td class="text-gray-400">YouTube</td><td class="font-geist text-[13px]">₹95,000</td><td><span class="badge-portone bg-emerald-50 text-emerald-700">송금 완료</span></td></tr>
-                    <tr><td class="font-medium text-gray-900">Lisa Muller</td><td class="text-gray-400">Instagram</td><td class="font-geist text-[13px]">€1,200</td><td><span class="badge-portone bg-gray-100 text-gray-500">정보 미제출</span></td></tr>
+                    <tr class="mock-table-row"><td class="font-medium text-gray-900">Sarah Johnson</td><td class="text-gray-400">YouTube</td><td class="font-geist text-[13px]">$2,400</td><td><span class="badge-portone bg-emerald-50 text-emerald-700">송금 완료</span></td></tr>
+                    <tr class="mock-table-row"><td class="font-medium text-gray-900">Yuki Tanaka</td><td class="text-gray-400">Instagram</td><td class="font-geist text-[13px]">¥180,000</td><td><span class="badge-portone bg-brand-light text-[#fc6b2d]">검증 완료</span></td></tr>
+                    <tr class="mock-table-row"><td class="font-medium text-gray-900">Emma Chen</td><td class="text-gray-400">TikTok</td><td class="font-geist text-[13px]">¥8,500</td><td><span class="badge-portone bg-amber-50 text-amber-700">검증 중</span></td></tr>
+                    <tr class="mock-table-row"><td class="font-medium text-gray-900">Priya Sharma</td><td class="text-gray-400">YouTube</td><td class="font-geist text-[13px]">₹95,000</td><td><span class="badge-portone bg-emerald-50 text-emerald-700">송금 완료</span></td></tr>
+                    <tr class="mock-table-row"><td class="font-medium text-gray-900">Lisa Muller</td><td class="text-gray-400">Instagram</td><td class="font-geist text-[13px]">€1,200</td><td><span class="badge-portone bg-gray-100 text-gray-500">정보 미제출</span></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -974,12 +1645,12 @@
                   <div class="h-px w-full bg-[#e5e7eb] mt-1"></div>
                 </div>
                 <!-- Email -->
-                <div class="flex flex-col gap-1.5">
+                <div class="mock-form-field flex flex-col gap-1.5">
                   <div class="flex items-center gap-1"><span class="text-[#374151] text-[14px] font-medium">Email</span><span class="text-[#ef4444] text-[13px]">*</span></div>
                   <div class="bg-white border border-[#d1d5db] rounded-[6px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] h-[38px] flex items-center px-3"><span class="text-[#9ca3af] text-[13px]">name@example.com</span></div>
                 </div>
                 <!-- Phone -->
-                <div class="flex flex-col gap-1.5">
+                <div class="mock-form-field flex flex-col gap-1.5">
                   <div class="flex items-center gap-1"><span class="text-[#374151] text-[14px] font-medium">Phone number</span><span class="text-[#ef4444] text-[13px]">*</span></div>
                   <div class="bg-white border border-[#d1d5db] rounded-[6px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] h-[38px] flex items-center px-3 gap-2">
                     <span class="text-[#9ca3af] text-[13px] w-[52px]">US +1</span>
@@ -989,12 +1660,12 @@
                   </div>
                 </div>
                 <!-- Handle -->
-                <div class="flex flex-col gap-1.5">
+                <div class="mock-form-field flex flex-col gap-1.5">
                   <span class="text-[#374151] text-[14px] font-medium">Handle</span>
                   <div class="bg-white border border-[#d1d5db] rounded-[6px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] h-[38px] flex items-center px-3"><span class="text-[#9ca3af] text-[13px]">@username</span></div>
                 </div>
                 <!-- Next Button -->
-                <button class="bg-[#111827] text-white text-[14px] font-medium rounded-[6px] h-[38px] w-full flex items-center justify-center mt-1">Next</button>
+                <button class="mock-form-action bg-[#111827] text-white text-[14px] font-medium rounded-[6px] h-[38px] w-full flex items-center justify-center mt-1">Next</button>
               </div>
             </div>
           </div>
@@ -1016,10 +1687,10 @@
               <div class="card-elevated p-6">
                 <div class="h-px bg-gray-100 my-4"></div>
                 <div class="space-y-2.5">
-                  <div class="flex items-center justify-between p-3.5 rounded-xl bg-emerald-50/80"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-[14px] font-medium text-gray-700">이름</span></div><span class="text-[12px] text-emerald-600 font-medium">일치</span></div>
-                  <div class="flex items-center justify-between p-3.5 rounded-xl bg-emerald-50/80"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-[14px] font-medium text-gray-700">국가</span></div><span class="text-[12px] text-emerald-600 font-medium">일치</span></div>
-                  <div class="flex items-center justify-between p-3.5 rounded-xl bg-red-50 border border-red-200/60"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[14px] font-medium text-red-600">계좌번호</span></div><span class="text-[12px] text-red-500 font-medium">불일치</span></div>
-                  <div class="flex items-center justify-between p-3.5 rounded-xl bg-emerald-50/80"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-[14px] font-medium text-gray-700">SWIFT 코드</span></div><span class="text-[12px] text-emerald-600 font-medium">유효</span></div>
+                  <div class="mock-status-row mock-status-row--ok flex items-center justify-between p-3.5 rounded-xl bg-emerald-50/80"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-[14px] font-medium text-gray-700">이름</span></div><span class="text-[12px] text-emerald-600 font-medium">일치</span></div>
+                  <div class="mock-status-row mock-status-row--ok flex items-center justify-between p-3.5 rounded-xl bg-emerald-50/80"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-[14px] font-medium text-gray-700">국가</span></div><span class="text-[12px] text-emerald-600 font-medium">일치</span></div>
+                  <div class="mock-status-row mock-status-row--error flex items-center justify-between p-3.5 rounded-xl bg-red-50 border border-red-200/60"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[14px] font-medium text-red-600">계좌번호</span></div><span class="text-[12px] text-red-500 font-medium">불일치</span></div>
+                  <div class="mock-status-row mock-status-row--ok flex items-center justify-between p-3.5 rounded-xl bg-emerald-50/80"><div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-[14px] font-medium text-gray-700">SWIFT 코드</span></div><span class="text-[12px] text-emerald-600 font-medium">유효</span></div>
                 </div>
                 <div class="flex gap-3 mt-5">
                   <button class="btn-ghost-brand rounded-pill flex-1 py-2.5 text-[13px] font-medium">반려</button>
@@ -1043,7 +1714,7 @@
                   <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-brand-light flex items-center justify-center"><svg class="w-3 h-3 text-[#fc6b2d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span><span class="text-[14px] text-gray-600">실시간 상태 추적 (Webhook)</span></li>
                 </ul>
               </div>
-              <div class="bg-white border border-[#e5e7eb] rounded-lg p-6 flex items-start justify-center w-full">
+              <div class="mock-transfer-panel bg-white border border-[#e5e7eb] rounded-lg p-6 flex items-start justify-center w-full">
                 <div class="flex flex-col gap-8 w-full max-w-[414px]">
                   <div class="flex flex-col gap-5">
                     <p class="text-[#111827] text-[20px] font-medium leading-[1.4]">일괄 지급을 실행할까요?</p>
@@ -1056,7 +1727,7 @@
                   </div>
                   <div class="flex items-center justify-end gap-2">
                     <button class="bg-[#f3f4f6] text-[#1f2937] text-[13px] font-medium rounded-[6px] h-9 px-3">닫기</button>
-                    <button class="bg-[#111827] text-white text-[13px] font-medium rounded-[6px] h-9 px-3">지급 실행</button>
+                    <button class="mock-transfer-action bg-[#111827] text-white text-[13px] font-medium rounded-[6px] h-9 px-3">지급 실행</button>
                   </div>
                 </div>
               </div>
@@ -1078,32 +1749,32 @@
       <!-- Desktop Steps -->
       <div class="fade-up hidden lg:block">
         <div class="grid grid-cols-6 gap-5">
-          <div class="text-center group">
+          <div class="text-center group workflow-step">
             <div class="workflow-icon"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></div>
             <div class="mt-4 text-[13px] font-bold text-white">인플루언서 등록</div>
             <div class="text-[12px] text-white/40 mt-1.5 leading-relaxed">기본 정보 입력 후<br/>등록</div>
           </div>
-          <div class="text-center group">
+          <div class="text-center group workflow-step">
             <div class="workflow-icon"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
             <div class="mt-4 text-[13px] font-bold text-white">폼 링크 발송</div>
             <div class="text-[12px] text-white/40 mt-1.5 leading-relaxed">자동 생성된<br/>고유 링크 전송</div>
           </div>
-          <div class="text-center group">
+          <div class="text-center group workflow-step">
             <div class="workflow-icon"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg></div>
             <div class="mt-4 text-[13px] font-bold text-white">정보·서류 제출</div>
             <div class="text-[12px] text-white/40 mt-1.5 leading-relaxed">인플루언서가<br/>직접 입력</div>
           </div>
-          <div class="text-center group">
+          <div class="text-center group workflow-step">
             <div class="workflow-icon"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.9-1.9"/></svg></div>
             <div class="mt-4 text-[13px] font-bold text-white">자동 검증</div>
             <div class="text-[12px] text-white/40 mt-1.5 leading-relaxed">OCR·SWIFT<br/>실시간 대조</div>
           </div>
-          <div class="text-center group">
+          <div class="text-center group workflow-step">
             <div class="workflow-icon"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></div>
             <div class="mt-4 text-[13px] font-bold text-white">일괄 송금 실행</div>
             <div class="text-[12px] text-white/40 mt-1.5 leading-relaxed">검증 완료 건<br/>일괄 처리</div>
           </div>
-          <div class="text-center group">
+          <div class="text-center group workflow-step">
             <div class="workflow-icon"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div>
             <div class="mt-4 text-[13px] font-bold text-white">상태 추적</div>
             <div class="text-[12px] text-white/40 mt-1.5 leading-relaxed">Webhook으로<br/>실시간 동기화</div>
@@ -1117,27 +1788,27 @@
 
       <!-- Mobile Steps -->
       <div class="fade-up lg:hidden space-y-3">
-        <div class="rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div class="mobile-workflow-card rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
           <div class="workflow-icon workflow-icon-sm"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></div>
           <div><div class="text-[13px] font-bold text-white">인플루언서 등록</div><div class="text-[12px] text-white/40 mt-0.5">기본 정보 입력 후 등록</div></div>
         </div>
-        <div class="rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div class="mobile-workflow-card rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
           <div class="workflow-icon workflow-icon-sm"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
           <div><div class="text-[13px] font-bold text-white">폼 링크 발송</div><div class="text-[12px] text-white/40 mt-0.5">자동 생성된 고유 링크 전송</div></div>
         </div>
-        <div class="rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div class="mobile-workflow-card rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
           <div class="workflow-icon workflow-icon-sm"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg></div>
           <div><div class="text-[13px] font-bold text-white">정보·서류 제출</div><div class="text-[12px] text-white/40 mt-0.5">인플루언서가 직접 입력</div></div>
         </div>
-        <div class="rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div class="mobile-workflow-card rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
           <div class="workflow-icon workflow-icon-sm"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.9-1.9"/></svg></div>
           <div><div class="text-[13px] font-bold text-white">자동 검증</div><div class="text-[12px] text-white/40 mt-0.5">OCR·SWIFT 실시간 대조</div></div>
         </div>
-        <div class="rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div class="mobile-workflow-card rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
           <div class="workflow-icon workflow-icon-sm"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></div>
           <div><div class="text-[13px] font-bold text-white">일괄 송금 실행</div><div class="text-[12px] text-white/40 mt-0.5">검증 완료 건 일괄 처리</div></div>
         </div>
-        <div class="rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div class="mobile-workflow-card rounded-2xl p-5 flex items-start gap-4 bg-white/5 border border-white/10 backdrop-blur-sm">
           <div class="workflow-icon workflow-icon-sm"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div>
           <div><div class="text-[13px] font-bold text-white">상태 추적</div><div class="text-[12px] text-white/40 mt-0.5">Webhook으로 실시간 동기화</div></div>
         </div>
@@ -1145,35 +1816,46 @@
     </div>
   </section>
 
-  <!-- ===== EXPECTED RESULTS ===== -->
-  <section id="results" class="py-24 bg-white relative overflow-hidden">
+  <!-- ===== PAYOUT METHODS ===== -->
+  <section id="payout-methods" class="section-surface-cool py-24 relative overflow-hidden">
     <div class="max-w-[1200px] mx-auto px-6 relative z-10">
       <div class="text-center mb-14 fade-up">
-        <span class="text-[11px] font-bold text-[#fc6b2d] tracking-[.15em] uppercase">Expected Results</span>
-        <h2 class="text-[28px] lg:text-[40px] font-[500] text-gray-900 mt-3 leading-tight tracking-tight-brand">숫자로 증명하는 업무 효율화</h2>
+        <span class="text-[11px] font-bold text-[#fc6b2d] tracking-[.15em] uppercase">Payout Methods</span>
+        <h2 class="text-[28px] lg:text-[40px] font-[500] text-gray-900 mt-3 leading-tight tracking-tight-brand">PayPal 또는 은행송금</h2>
+        <p class="text-[15px] text-gray-500 mt-4">한 대시보드에서 자동 분기</p>
       </div>
-      <div class="fade-up">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
-          <div class="card-elevated p-8 text-center transition-all duration-300">
-            <div class="text-[40px] lg:text-[48px] stat-value-brand gradient-text-brand" data-count="85" data-suffix="%">0%</div>
-            <div class="font-bold text-gray-900 text-[14px] mt-1">수작업 절감</div>
-            <div class="text-[12px] text-gray-400 mt-2 leading-relaxed">서류 검증 자동화로<br/>재무팀 리소스 확보</div>
+
+      <div class="payout-scene fade-up d1" data-payout-scene data-active-rail="paypal">
+        <div class="payout-scene-orb payout-scene-orb--warm"></div>
+        <div class="payout-scene-orb payout-scene-orb--cool"></div>
+
+        <div class="payout-scene-shell">
+          <div class="payout-network">
+            <button type="button" class="payout-method-card payout-method-card--paypal" data-rail="paypal" aria-label="PayPal 라우팅 보기">
+              <div class="payout-method-name" style="color:#2563eb">PayPal</div>
+              <div class="payout-method-caption">빠른 지급</div>
+            </button>
+
+            <div class="payout-router" aria-hidden="true">
+              <div class="payout-router-line payout-router-line--left"></div>
+              <div class="payout-router-line payout-router-line--right"></div>
+              <span class="payout-router-packet payout-router-packet--left"></span>
+              <span class="payout-router-packet payout-router-packet--left payout-router-packet--delay"></span>
+              <span class="payout-router-packet payout-router-packet--right"></span>
+              <span class="payout-router-packet payout-router-packet--right payout-router-packet--delay"></span>
+              <div class="payout-router-core">
+                <div class="payout-router-core-label">
+                  <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="payout-method-card payout-method-card--bank" data-rail="bank" aria-label="은행송금 라우팅 보기">
+              <div class="payout-method-name" style="color:#fc6b2d">은행송금</div>
+              <div class="payout-method-caption">계좌 직접 지급</div>
+            </button>
           </div>
-          <div class="card-elevated p-8 text-center transition-all duration-300">
-            <div class="text-[40px] lg:text-[48px] stat-value-brand gradient-text-brand" data-count="99" data-suffix="%">0%</div>
-            <div class="font-bold text-gray-900 text-[14px] mt-1">오류 감소</div>
-            <div class="text-[12px] text-gray-400 mt-2 leading-relaxed">자동 대조로<br/>계좌 불일치 오류 제거</div>
-          </div>
-          <div class="card-elevated p-8 text-center transition-all duration-300">
-            <div class="text-[40px] lg:text-[48px] stat-value-brand gradient-text-brand" data-count="24" data-suffix="H">0H</div>
-            <div class="font-bold text-gray-900 text-[14px] mt-1">즉시 송금</div>
-            <div class="text-[12px] text-gray-400 mt-2 leading-relaxed">영업시간 관계없이<br/>언제든 처리</div>
-          </div>
-          <div class="card-elevated p-8 text-center transition-all duration-300">
-            <div class="text-[40px] lg:text-[48px] stat-value-brand gradient-text-brand" data-count="70" data-suffix="%">0%</div>
-            <div class="font-bold text-gray-900 text-[14px] mt-1">수수료 절감</div>
-            <div class="text-[12px] text-gray-400 mt-2 leading-relaxed">SWIFT 대비<br/>Airwallex 수수료 절감</div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -1202,23 +1884,23 @@
       <div class="space-y-3 fade-up">
         <details class="faq-item">
           <summary>어떤 송금 수단을 지원하나요?</summary>
-          <div class="faq-body">Airwallex와 PayPal을 지원합니다. 국가·통화에 따라 적합한 수단을 선택할 수 있으며, 특정 수단을 제한하는 설정도 가능합니다.</div>
+          <div class="faq-body"><div class="faq-body-inner">PayPal과 은행 계좌 송금을 지원합니다. 은행송금은 Airwallex를 통해 처리하며, 국가·통화·정산 금액에 따라 적합한 수단을 선택하거나 특정 수단만 허용하도록 설정할 수 있습니다.</div></div>
         </details>
         <details class="faq-item">
           <summary>OCR 검증이 실패하면 어떻게 처리되나요?</summary>
-          <div class="faq-body">자동 검증이 불가한 경우 담당자가 수기로 확인 후 승인 또는 반려할 수 있는 UI를 제공합니다. 반려 시 인플루언서에게 재제출을 요청할 수 있습니다.</div>
+          <div class="faq-body"><div class="faq-body-inner">자동 검증이 불가한 경우 담당자가 수기로 확인 후 승인 또는 반려할 수 있는 UI를 제공합니다. 반려 시 인플루언서에게 재제출을 요청할 수 있습니다.</div></div>
         </details>
         <details class="faq-item">
           <summary>외국환거래법 규제를 준수할 수 있나요?</summary>
-          <div class="faq-body">연 10만 달러 무증빙 기준에 맞춰 송금 내역을 자동 집계하고, 초과 시 인보이스 제출 안내를 제공합니다. 1만 달러 초과 시 국세청·관세청 자동 통보 기준도 관리할 수 있습니다.</div>
+          <div class="faq-body"><div class="faq-body-inner">연 10만 달러 무증빙 기준에 맞춰 송금 내역을 자동 집계하고, 초과 시 인보이스 제출 안내를 제공합니다. 1만 달러 초과 시 국세청·관세청 자동 통보 기준도 관리할 수 있습니다.</div></div>
         </details>
         <details class="faq-item">
           <summary>인플루언서 폼은 어떤 언어를 지원하나요?</summary>
-          <div class="faq-body">영어, 한국어, 중국어, 일본어 등 다국어 폼을 지원합니다. 인플루언서의 국가에 맞게 자동으로 언어가 설정됩니다.</div>
+          <div class="faq-body"><div class="faq-body-inner">영어, 한국어, 중국어, 일본어 등 다국어 폼을 지원합니다. 인플루언서의 국가에 맞게 자동으로 언어가 설정됩니다.</div></div>
         </details>
         <details class="faq-item">
           <summary>포트원 파트너 정산 자동화와 함께 사용할 수 있나요?</summary>
-          <div class="faq-body">네, 기존 파트너 정산 자동화 서비스와 연계하여 국내·해외 정산을 통합 관리할 수 있습니다. 정산 내역서 발송 기능도 재사용 가능합니다.</div>
+          <div class="faq-body"><div class="faq-body-inner">네, 기존 파트너 정산 자동화 서비스와 연계하여 국내·해외 정산을 통합 관리할 수 있습니다. 정산 내역서 발송 기능도 재사용 가능합니다.</div></div>
         </details>
       </div>
     </div>
@@ -1426,6 +2108,8 @@
 
   <!-- ===== SCRIPTS ===== -->
   <script>
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
     // 1. Navbar scroll
     var nav = document.getElementById('navbar');
     window.addEventListener('scroll', function () {
@@ -1445,20 +2129,43 @@
     function switchTab(index) {
       var btns = document.querySelectorAll('.tab-btn');
       var contents = document.querySelectorAll('.tab-content');
-      btns.forEach(function (btn) {
+      btns.forEach(function (btn, btnIndex) {
         btn.classList.remove('tab-pill-active');
         btn.classList.add('text-gray-500');
+        btn.setAttribute('aria-selected', String(btnIndex === index));
       });
-      contents.forEach(function (c) { c.classList.add('hidden'); });
       btns[index].classList.add('tab-pill-active');
       btns[index].classList.remove('text-gray-500');
-      contents[index].classList.remove('hidden');
+      contents.forEach(function (content, contentIndex) {
+        if (contentIndex === index) {
+          content.classList.remove('hidden');
+          if (prefersReducedMotion.matches) {
+            content.classList.add('is-current');
+          } else {
+            requestAnimationFrame(function () {
+              content.classList.add('is-current');
+            });
+          }
+          return;
+        }
+
+        content.classList.remove('is-current');
+        if (prefersReducedMotion.matches) {
+          content.classList.add('hidden');
+          return;
+        }
+
+        window.setTimeout(function () {
+          if (!content.classList.contains('is-current')) {
+            content.classList.add('hidden');
+          }
+        }, 220);
+      });
     }
 
-    // 4. Modal
+    // 4. Inquiry redirect
     function openModal() {
-      document.getElementById('inquiry-modal').classList.add('active');
-      document.body.style.overflow = 'hidden';
+      window.location.href = 'https://www.forms.portone.io/global_ap';
     }
     function closeModal() {
       document.getElementById('inquiry-modal').classList.remove('active');
@@ -1490,7 +2197,82 @@
       fadeObserver.observe(el);
     });
 
-    // 7. Stats count-up
+    // 7. Hero tilt
+    function setupTiltCards() {
+      if (prefersReducedMotion.matches) return;
+
+      document.querySelectorAll('[data-tilt-card]').forEach(function (card) {
+        var active = false;
+
+        card.addEventListener('pointermove', function (event) {
+          if (window.innerWidth < 1024) return;
+
+          var rect = card.getBoundingClientRect();
+          var offsetX = event.clientX - rect.left;
+          var offsetY = event.clientY - rect.top;
+          var rotateY = ((offsetX / rect.width) - 0.5) * 7;
+          var rotateX = (0.5 - (offsetY / rect.height)) * 7;
+
+          card.style.transform = 'perspective(1200px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) translateY(-4px)';
+          active = true;
+        });
+
+        card.addEventListener('pointerleave', function () {
+          if (!active) return;
+          card.style.transform = '';
+          active = false;
+        });
+      });
+    }
+
+    // 8. FAQ accordion polish
+    function setupFaqItems() {
+      var faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(function (item) {
+        var summary = item.querySelector('summary');
+        summary.addEventListener('click', function () {
+          if (item.hasAttribute('open')) return;
+          window.setTimeout(function () {
+            faqItems.forEach(function (other) {
+              if (other !== item) other.removeAttribute('open');
+            });
+          }, 0);
+        });
+      });
+    }
+
+    // 9. Payout method scene
+    function setupPayoutScene() {
+      var scenes = document.querySelectorAll('[data-payout-scene]');
+      if (!scenes.length || prefersReducedMotion.matches) return;
+
+      scenes.forEach(function (scene) {
+        var rails = ['paypal', 'bank'];
+        var index = rails.indexOf(scene.getAttribute('data-active-rail'));
+        if (index < 0) index = 0;
+        scene.querySelectorAll('[data-rail]').forEach(function (card) {
+          var rail = card.getAttribute('data-rail');
+          card.addEventListener('pointerenter', function () {
+            scene.setAttribute('data-active-rail', rail); index = rails.indexOf(rail);
+          });
+          card.addEventListener('focusin', function () {
+            scene.setAttribute('data-active-rail', rail); index = rails.indexOf(rail);
+          });
+        });
+
+        window.setInterval(function () {
+          index = (index + 1) % rails.length;
+          scene.setAttribute('data-active-rail', rails[index]);
+        }, 2800);
+      });
+    }
+
+    setupTiltCards();
+    setupFaqItems();
+    setupPayoutScene();
+    switchTab(0);
+
+    // 10. Stats count-up
     function animateCount(el) {
       var target = parseInt(el.getAttribute('data-count'));
       var suffix = el.getAttribute('data-suffix') || '';
