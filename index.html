@@ -1146,13 +1146,6 @@
       position: relative;
       overflow: hidden;
       padding: 32px;
-      border-radius: 32px;
-      border: 1px solid rgba(229,231,235,0.9);
-      background:
-        radial-gradient(circle at 18% 18%, rgba(37,99,235,0.12) 0%, rgba(37,99,235,0) 28%),
-        radial-gradient(circle at 82% 22%, rgba(252,107,45,0.12) 0%, rgba(252,107,45,0) 26%),
-        linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(248,250,252,0.98) 100%);
-      box-shadow: 0 24px 60px rgba(15,23,42,0.08);
     }
     .payout-scene-orb {
       position: absolute;
@@ -2370,8 +2363,8 @@
               <div class="text-[13px] text-gray-500 mt-1">송금 지원 국가</div>
             </div>
             <div>
-              <div class="text-[36px] lg:text-[44px] stat-value-brand gradient-text-brand">10만$</div>
-              <div class="text-[13px] text-gray-500 mt-1">무증빙 규정 자동 대응</div>
+              <div class="text-[36px] lg:text-[44px] stat-value-brand gradient-text-brand" data-count="60" data-suffix="%+">0%+</div>
+              <div class="text-[13px] text-gray-500 mt-1">시중 은행 대비 수수료 절감</div>
             </div>
           </div>
         </div>
@@ -2743,9 +2736,6 @@
       </div>
 
       <div class="payout-scene fade-up d1" data-payout-scene data-active-rail="paypal">
-        <div class="payout-scene-orb payout-scene-orb--warm"></div>
-        <div class="payout-scene-orb payout-scene-orb--cool"></div>
-
         <div class="payout-scene-shell">
           <div class="payout-network">
             <button type="button" class="payout-method-card payout-method-card--paypal" data-rail="paypal" aria-label="PayPal 라우팅 보기">
@@ -2755,7 +2745,6 @@
                 </svg>
               </span>
               <div class="payout-method-name" style="color:#2563eb">PayPal</div>
-              <div class="payout-method-caption">빠르게 정산을 시작해야 하는 팀에 잘 맞는 간편 송금 방식입니다.</div>
               <div class="payout-method-points">
                 <div class="payout-method-point">
                   <span class="payout-method-point-icon">
@@ -2797,7 +2786,6 @@
                 </svg>
               </span>
               <div class="payout-method-name" style="color:#fc6b2d">은행송금</div>
-              <div class="payout-method-caption">국가별 요구사항에 맞춰 정확하게 지급해야 하는 상황에 적합한 방식입니다.</div>
               <div class="payout-method-points">
                 <div class="payout-method-point">
                   <span class="payout-method-point-icon">
